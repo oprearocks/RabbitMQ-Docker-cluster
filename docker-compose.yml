@@ -1,0 +1,44 @@
+version: "2"
+services:
+  rabbit1:
+    image: rabbitmq:3-management
+    hostname: rabbit1
+    domainname: oprea.rocks
+    environment:
+      RABBITMQ_ERLANG_COOKIE: "secret string"
+      RABBITMQ_NODENAME: rabbit1
+    volumes:
+      - "./rabbitmq.config:/etc/rabbitmq/rabbitmq.config"
+      - "./definitions.json:/etc/rabbitmq/definitions.json"
+    ports:
+      - "4369:4369"
+      - "5671:5671"
+      - "5672:5672"
+      - "15671:15671"
+      - "15672:15672"
+      - "25672:25672"
+
+  rabbit2:
+    image: rabbitmq:3-management
+    hostname: rabbit2
+    domainname: oprea.rocks
+    environment:
+      RABBITMQ_ERLANG_COOKIE: "secret string"
+      RABBITMQ_NODENAME: rabbit2
+    volumes:
+      - "./rabbitmq.config:/etc/rabbitmq/rabbitmq.config"
+      - "./definitions.json:/etc/rabbitmq/definitions.json"
+    links:
+      - "rabbit1:rabbit1"
+  rabbit3:
+    image: rabbitmq:3-management
+    hostname: rabbit3
+    domainname: oprea.rocks
+    environment:
+      RABBITMQ_ERLANG_COOKIE: "secret string"
+      RABBITMQ_NODENAME: rabbit3
+    volumes:
+      - "./rabbitmq.config:/etc/rabbitmq/rabbitmq.config"
+      - "./definitions.json:/etc/rabbitmq/definitions.json"
+    links:
+      - "rabbit1:rabbit1"
