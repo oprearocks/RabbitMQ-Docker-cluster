@@ -1,9 +1,8 @@
-version: "2"
+version: "3"
 services:
   rabbit1:
     image: rabbitmq:3-management
     hostname: rabbit1
-    domainname: oprea.rocks
     environment:
       RABBITMQ_ERLANG_COOKIE: "secret string"
       RABBITMQ_NODENAME: rabbit1
@@ -21,24 +20,28 @@ services:
   rabbit2:
     image: rabbitmq:3-management
     hostname: rabbit2
-    domainname: oprea.rocks
+    depends_on:
+      - rabbit1
     environment:
       RABBITMQ_ERLANG_COOKIE: "secret string"
       RABBITMQ_NODENAME: rabbit2
     volumes:
       - "./rabbitmq.config:/etc/rabbitmq/rabbitmq.config"
       - "./definitions.json:/etc/rabbitmq/definitions.json"
-    links:
-      - "rabbit1:rabbit1"
+    
   rabbit3:
     image: rabbitmq:3-management
     hostname: rabbit3
-    domainname: oprea.rocks
+    depends_on:
+      - rabbit1
     environment:
       RABBITMQ_ERLANG_COOKIE: "secret string"
       RABBITMQ_NODENAME: rabbit3
     volumes:
       - "./rabbitmq.config:/etc/rabbitmq/rabbitmq.config"
       - "./definitions.json:/etc/rabbitmq/definitions.json"
-    links:
-      - "rabbit1:rabbit1"
+
+networks:
+  default:
+    external:
+      name: rabbitmq-cluster
